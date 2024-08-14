@@ -1,0 +1,96 @@
+create database inzish;
+
+create table student(
+RollNum varchar(20) not null,
+Name varchar(255),
+Gender varchar(255),
+Phone varchar(255)
+);
+insert into student
+values ('L164123','Ali Ahmad','Male','0333-3333333')
+insert into student
+values ('L164124','Rafia Ahmed','Female','0333-3456789')
+insert into student
+values ('L164125','Basit Junaid','Male','0345-3243567')
+select * from student
+
+create table Attendence(
+RollNum varchar(20) not null,
+date DATE not null,
+Status varchar(10),
+ClassVenue int
+);
+insert into Attendence
+values ('L164123','2-22-2016','P','2')
+insert into Attendence
+values ('L164124','2-23-2016','A','1')
+insert into Attendence
+values ('L164125','3-4-2016','P','2')
+
+select * from Attendence 
+
+create table ClassVenue(
+ID int not null,
+Building varchar(255),
+RoomNum int,
+Teacher varchar(255)
+);
+
+insert into ClassVenue
+values ('1','CS','2','Sarim Baig')
+insert into ClassVenue
+values ('2','Civil','7','Bismillah Jan')
+select * from ClassVenue
+
+create table Teacher(
+Name varchar(255) not null,
+Designation varchar(255),
+Department varchar(255)
+);
+
+insert into Teacher
+values ('Sarim Baig','Assistant Prof.',' Computer Science')
+insert into Teacher
+values ('Bismillah Jan',' Lecturer',' Civil Eng.')
+insert into Teacher
+values ('Kashif zafar', 'Professor', 'Electrical Eng.')
+select * from Teacher
+
+Alter Table Student add constraint PK_STUDENT primary key (RollNum)
+Alter Table Attendence add constraint PK_Attendence primary key (RollNum)
+Alter Table ClassVenue add constraint PK_ClassVenue primary key (ID)
+Alter Table Teacher add constraint PK_Teacher primary key (Name)
+
+Alter Table ClassVenue add constraint FK_classVenue foreign key (Teacher) references
+Teacher (Name) on delete No Action on update Cascade
+
+Alter Table Attendence add constraint FK_STUDENT foreign key (RollNum) references
+Student (RollNum) on delete No Action on update Cascade
+
+alter table Student drop column Phone
+alter table Student add warningCount int 
+select * from Student
+
+insert into Student
+values ('L162334', 'Fozan Shahid', 'Male', '3.2') --this is invalid and can be made valid if we cascade it
+
+insert into ClassVenue
+values ('3', 'CS', '5', 'Ali') --foregin key contraint violated as it cannot be updated
+
+update Teacher
+set Name='Dr. Kashif Zafar'
+where Name='Kashif zafar'  --valid query
+select * from Teacher
+
+delete from Student
+where RollNum='L162334'  --it is a valid query but it is not valid for the specifc table as there is no rollno matching this table
+delete from Student
+where RollNum='L164123'  --it is not a valid query because of foregin key constraint
+delete from Attendence 
+where RollNum='L164124' and Status='A'  -- it is a valid query 
+select *from Attendence 
+
+Alter Table Teacher add constraint UNIQUE_CONSTRAINT_STUDENT_NAME Unique (Name)
+alter table Student add Constraint STUDENT_CHECK check (Gender in ('Male','Female'))
+alter table Attendence add Constraint STUDENT_CHECK_1
+ check (Status in ('A' ,'P'))
